@@ -6,13 +6,14 @@ import '../styles/search.css';
 export default function Search({ setWord }) {
   const wordRed = useRef(null);
   const posRef = useRef(null);
+  const btnRef = useRef(null);
   const searchFor = async (e) => {
     e.preventDefault();
     const word = wordRed.current.value;
     const pos = posRef.current.value;
     const searchUrl = !pos
-      ? `http://localhost:3001/${word}`
-      : `http://localhost:3001/${word}/${pos}`;
+      ? `https://oow8ykat0l.execute-api.eu-west-1.amazonaws.com/dev/${word}`
+      : `https://oow8ykat0l.execute-api.eu-west-1.amazonaws.com/dev/${word}/${pos}`;
     const response = await axios.get(searchUrl);
     console.log(response);
     setWord(response.data);
@@ -36,6 +37,13 @@ export default function Search({ setWord }) {
     </option>
   ));
 
+  const mouseDownFunc = () => {
+    btnRef.current.style.boxShadow = '0 0 2px rgb(94, 94, 94);';
+  };
+  const mouseUpFunc = () => {
+    btnRef.current.style.boxShadow = '0 0 5px rgb(94, 94, 94);';
+  };
+
   return (
     <form onSubmit={searchFor}>
       <input type='text' ref={wordRed} />
@@ -44,7 +52,14 @@ export default function Search({ setWord }) {
           <option value='' disabled></option>
           {options}
         </select>
-        <button type='submit'>Search</button>
+        <button
+          type='submit'
+          ref={btnRef}
+          onMouseDown={mouseDownFunc}
+          onMouseUp={mouseUpFunc}
+        >
+          Search
+        </button>
       </div>
     </form>
   );
